@@ -1125,14 +1125,10 @@ const printShiftReport = (
   });
 };
 
-const printSalesSummary = (
-  dataTrx,
-  total = convertToRupiah(3549000),
-  numInv = 5,
-  AvgInvBill = convertToRupiah(23923)
-) => {
+const printSalesSummary = (dataTrx) => {
   let data = JSON.parse(dataTrx);
   console.log(data);
+  let data_total = [];
   device.open(function () {
     printer
       .font("B")
@@ -1201,16 +1197,35 @@ const printSalesSummary = (
           width: 0.5,
           style: "NORMAL",
         },
-      ])
-      .tableCustom([
-        { text: "Total Discount", align: "LEFT", width: 0.5, style: "NORMAL" },
-        {
-          text: convertToRupiah(data.total.disc),
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
+      ]);
+
+    if (data_total.length > 0) {
+      data_total.forEach((item, index, arr) => {
+        printer
+          .style("NORMAL")
+          .size(0.05, 0.05)
+          .tableCustom([
+            { text: item.title, align: "LEFT", width: 0.5, style: "NORMAL" },
+            {
+              text: convertToRupiah(item.total),
+              align: "RIGHT",
+              width: 0.5,
+              style: "NORMAL",
+            },
+          ]);
+      });
+    }
+
+    // .tableCustom([
+    //   { text: "Total Discount", align: "LEFT", width: 0.5, style: "NORMAL" },
+    //   {
+    //     text: convertToRupiah(data.total.disc),
+    //     align: "RIGHT",
+    //     width: 0.5,
+    //     style: "NORMAL",
+    //   },
+    // ])
+    printer
       .tableCustom([
         {
           text: "Total Service Charge",
@@ -1225,20 +1240,20 @@ const printSalesSummary = (
           style: "NORMAL",
         },
       ])
-      .tableCustom([
-        {
-          text: "Total Tax",
-          align: "LEFT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-        {
-          text: convertToRupiah(data.total.tax),
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
+      // .tableCustom([
+      //   {
+      //     text: "Total Tax",
+      //     align: "LEFT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      //   {
+      //     text: convertToRupiah(data.total.tax),
+      //     align: "RIGHT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      // ])
       .tableCustom([
         {
           text: "Total Adjustment",
@@ -1258,22 +1273,22 @@ const printSalesSummary = (
       .size(0.5, 0.5)
       .drawLine()
 
-      .style("B")
-      .size(0.5, 0.5)
-      .tableCustom([
-        {
-          text: "Total",
-          align: "LEFT",
-          width: 0.5,
-          style: "B",
-        },
-        {
-          text: convertToRupiah(data.total.total),
-          align: "RIGHT",
-          width: 0.5,
-          style: "B",
-        },
-      ])
+      // .style("B")
+      // .size(0.5, 0.5)
+      // .tableCustom([
+      //   {
+      //     text: "Total",
+      //     align: "LEFT",
+      //     width: 0.5,
+      //     style: "B",
+      //   },
+      //   {
+      //     text: convertToRupiah(data.total.total),
+      //     align: "RIGHT",
+      //     width: 0.5,
+      //     style: "B",
+      //   },
+      // ])
 
       .newLine()
 
@@ -1353,9 +1368,9 @@ const printSalesSummary = (
 
         printer.drawLine();
 
-        if (index + 1 != data.summary.CASH.invoice.length) {
-          printer.newLine();
-        }
+        // if (index + 1 != data.summary.CASH.invoice.length) {
+        //   printer.newLine();
+        // }
       });
 
       printer
@@ -1376,6 +1391,10 @@ const printSalesSummary = (
           },
         ])
         .newLine();
+      data_total.push({
+        title: "Total Summary by " + data.summary.CASH.title,
+        total: data.summary.CASH.total,
+      });
     }
 
     if ("DEBIT" in data.summary) {
@@ -1385,7 +1404,7 @@ const printSalesSummary = (
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "SUMMARY BY " + item.title,
+              text: "SUMMARY BY DEBIT " + item.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
@@ -1465,16 +1484,16 @@ const printSalesSummary = (
 
           printer.drawLine();
 
-          if (index + 1 != item.invoice.length) {
-            printer.newLine();
-          }
+          // if (index + 1 != item.invoice.length) {
+          //   printer.newLine();
+          // }
         });
         printer
           .style("B")
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "Total Summary by " + item.title,
+              text: "Total Summary by DEBIT " + item.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
@@ -1487,6 +1506,10 @@ const printSalesSummary = (
             },
           ])
           .newLine();
+        data_total.push({
+          title: "Total Summary by DEBIT " + item.title,
+          total: item.total,
+        });
       });
     }
 
@@ -1497,7 +1520,7 @@ const printSalesSummary = (
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "SUMMARY BY " + item.title,
+              text: "SUMMARY BY KREDIT " + item.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
@@ -1577,16 +1600,16 @@ const printSalesSummary = (
 
           printer.drawLine();
 
-          if (index + 1 != item.invoice.length) {
-            printer.newLine();
-          }
+          // if (index + 1 != item.invoice.length) {
+          //   printer.newLine();
+          // }
         });
         printer
           .style("B")
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "Total Summary by " + item.title,
+              text: "Total Summary by KREDIT " + item.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
@@ -1599,6 +1622,10 @@ const printSalesSummary = (
             },
           ])
           .newLine();
+        data_total.push({
+          title: "Total Summary by KREDIT " + item.title,
+          total: item.total,
+        });
       });
     }
 
