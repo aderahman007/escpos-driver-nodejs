@@ -13,5 +13,16 @@
   },
   "scripts": {
     "dev": "nodemon server.js"
+  },
+  "name": "printer",
+  "bin": "./server.js",
+  "pkg": {
+    "assets": "node_modules/**/*",
+    "target": [
+      "node16-linux-x64",
+      "node16-mac-x64",
+      "node16-win-x64"
+    ],
+    "outputPath": "dist"
   }
 }
