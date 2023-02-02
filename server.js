@@ -69,7 +69,7 @@ app.post("/printSalesSummary", (req, res) => {
   let response = req.body;
 
   // console.log(response);
-  printSalesSummary(response.data);
+  printSalesSummary(response.data, response.type);
 });
 
 const convertToRupiah = (number, currency = "Rp. ") => {
@@ -1125,306 +1125,202 @@ const printShiftReport = (
   });
 };
 
-const printSalesSummary = (dataTrx) => {
+const printSalesSummary = (dataTrx, type = 'detail') => {
   let data = JSON.parse(dataTrx);
   console.log(data);
   let data_total = [];
-  device.open(function () {
-    printer
-      .font("B")
-      .align("CT")
-      .style("B")
-      .size(1.5, 1.5)
-      .text("SALES SUMMARY")
 
-      .newLine()
+  if (type == 'detail') {
+    device.open(function () {
+      printer
+        .font("B")
+        .align("CT")
+        .style("B")
+        .size(1.5, 1.5)
+        .text("SALES SUMMARY")
 
-      .style("NORMAL")
-      .size(0.5, 0.5)
-      .drawLine()
+        .newLine()
 
-      .style("NORMAL")
-      .size(0.05, 0.05)
+        .style("NORMAL")
+        .size(0.5, 0.5)
+        .drawLine()
 
-      .tableCustom([
-        { text: "Tanggal", align: "LEFT", width: 0.5, style: "NORMAL" },
-        {
-          text: data.date,
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
-      .tableCustom([
-        { text: "Cashier", align: "LEFT", width: 0.5, style: "NORMAL" },
-        {
-          text: data.cashier,
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
-      .tableCustom([
-        { text: "Nama Cashier", align: "LEFT", width: 0.5, style: "NORMAL" },
-        {
-          text: data.cashierName,
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
-      .tableCustom([
-        { text: "Shift", align: "LEFT", width: 0.5, style: "NORMAL" },
-        {
-          text: data.shift,
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
+        .style("NORMAL")
+        .size(0.05, 0.05)
 
-      .style("NORMAL")
-      .size(0.5, 0.5)
-      .drawLine()
+        .tableCustom([
+          { text: "Tanggal", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.date,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+        .tableCustom([
+          { text: "Cashier", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.cashier,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+        .tableCustom([
+          { text: "Nama Cashier", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.cashierName,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+        .tableCustom([
+          { text: "Shift", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.shift,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
 
-      .style("NORMAL")
-      .size(0.05, 0.05)
-      .tableCustom([
-        { text: "Total Sales", align: "LEFT", width: 0.5, style: "NORMAL" },
-        {
-          text: convertToRupiah(data.total.sales),
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ]);
+        .style("NORMAL")
+        .size(0.5, 0.5)
+        .drawLine()
 
-    if (data_total.length > 0) {
-      data_total.forEach((item, index, arr) => {
-        printer
-          .style("NORMAL")
-          .size(0.05, 0.05)
-          .tableCustom([
-            { text: item.title, align: "LEFT", width: 0.5, style: "NORMAL" },
-            {
-              text: convertToRupiah(item.total),
-              align: "RIGHT",
-              width: 0.5,
-              style: "NORMAL",
-            },
-          ]);
-      });
-    }
+        .style("NORMAL")
+        .size(0.05, 0.05)
+        .tableCustom([
+          { text: "Total Sales", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: convertToRupiah(data.total.sales),
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ]);
 
-    // .tableCustom([
-    //   { text: "Total Discount", align: "LEFT", width: 0.5, style: "NORMAL" },
-    //   {
-    //     text: convertToRupiah(data.total.disc),
-    //     align: "RIGHT",
-    //     width: 0.5,
-    //     style: "NORMAL",
-    //   },
-    // ])
-    // printer
-    //   .tableCustom([
-    //     {
-    //       text: "Total Service Charge",
-    //       align: "LEFT",
-    //       width: 0.5,
-    //       style: "NORMAL",
-    //     },
-    //     {
-    //       text: convertToRupiah(data.total.servCharge),
-    //       align: "RIGHT",
-    //       width: 0.5,
-    //       style: "NORMAL",
-    //     },
-    //   ])
-      // .tableCustom([
-      //   {
-      //     text: "Total Tax",
-      //     align: "LEFT",
-      //     width: 0.5,
-      //     style: "NORMAL",
-      //   },
-      //   {
-      //     text: convertToRupiah(data.total.tax),
-      //     align: "RIGHT",
-      //     width: 0.5,
-      //     style: "NORMAL",
-      //   },
-      // ])
-      // .tableCustom([
-      //   {
-      //     text: "Total Adjustment",
-      //     align: "LEFT",
-      //     width: 0.5,
-      //     style: "NORMAL",
-      //   },
-      //   {
-      //     text: convertToRupiah(data.total.adjustment),
-      //     align: "RIGHT",
-      //     width: 0.5,
-      //     style: "NORMAL",
-      //   },
-      // ])
-
-      printer.style("NORMAL")
-      .size(0.5, 0.5)
-      .drawLine()
-
-      // .style("B")
-      // .size(0.5, 0.5)
-      // .tableCustom([
-      //   {
-      //     text: "Total",
-      //     align: "LEFT",
-      //     width: 0.5,
-      //     style: "B",
-      //   },
-      //   {
-      //     text: convertToRupiah(data.total.total),
-      //     align: "RIGHT",
-      //     width: 0.5,
-      //     style: "B",
-      //   },
-      // ])
-
-      .newLine()
-
-      .style("B")
-      .size(0.5, 0.5)
-      .tableCustom([
-        {
-          text: "SUMMARY BY CASH",
-          align: "LEFT",
-          width: 0.5,
-          style: "B",
-        },
-        {
-          text: "",
-          align: "LEFT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
-
-      .newLine();
-
-    if ("CASH" in data.summary) {
-      data.summary.CASH.invoice.forEach((item1, index1, arr1) => {
-        printer
-          .style("B")
-          .size(0.5, 0.5)
-          .tableCustom([
-            {
-              text: item1.code,
-              align: "LEFT",
-              width: 0.5,
-              style: "B",
-            },
-            {
-              text: "",
-              align: "RIGHT",
-              width: 0.5,
-              style: "B",
-            },
-          ])
-
-          .style("NORMAL")
-          .size(0.05, 0.05)
-          .drawLine()
-
-          .style("NORMAL")
-          .size(0.05, 0.05)
-          .tableCustom([
-            { text: "Product", align: "LEFT", width: 0.5, style: "NORMAL" },
-            { text: "QTY", align: "CENTER", width: 0.1, style: "NORMAL" },
-            { text: "SUB TOTAL", align: "RIGHT", width: 0.3, style: "NORMAL" },
-          ])
-
-          .drawLine();
-
-        item.product.forEach((item2, index2, arr2) => {
+      if (data_total.length > 0) {
+        data_total.forEach((item, index, arr) => {
           printer
             .style("NORMAL")
             .size(0.05, 0.05)
             .tableCustom([
+              { text: item.title, align: "LEFT", width: 0.5, style: "NORMAL" },
               {
-                text: item2.productName,
-                align: "LEFT",
-                width: 0.5,
-                style: "NORMAL",
-              },
-              { text: item2.qty, align: "CENTER", width: 0.1, style: "NORMAL" },
-              {
-                text: convertToRupiah(item2.subTotal),
+                text: convertToRupiah(item.total),
                 align: "RIGHT",
-                width: 0.3,
+                width: 0.5,
                 style: "NORMAL",
               },
             ]);
         });
+      }
 
-        printer.drawLine();
+      // .tableCustom([
+      //   { text: "Total Discount", align: "LEFT", width: 0.5, style: "NORMAL" },
+      //   {
+      //     text: convertToRupiah(data.total.disc),
+      //     align: "RIGHT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      // ])
+      // printer
+      //   .tableCustom([
+      //     {
+      //       text: "Total Service Charge",
+      //       align: "LEFT",
+      //       width: 0.5,
+      //       style: "NORMAL",
+      //     },
+      //     {
+      //       text: convertToRupiah(data.total.servCharge),
+      //       align: "RIGHT",
+      //       width: 0.5,
+      //       style: "NORMAL",
+      //     },
+      //   ])
+        // .tableCustom([
+        //   {
+        //     text: "Total Tax",
+        //     align: "LEFT",
+        //     width: 0.5,
+        //     style: "NORMAL",
+        //   },
+        //   {
+        //     text: convertToRupiah(data.total.tax),
+        //     align: "RIGHT",
+        //     width: 0.5,
+        //     style: "NORMAL",
+        //   },
+        // ])
+        // .tableCustom([
+        //   {
+        //     text: "Total Adjustment",
+        //     align: "LEFT",
+        //     width: 0.5,
+        //     style: "NORMAL",
+        //   },
+        //   {
+        //     text: convertToRupiah(data.total.adjustment),
+        //     align: "RIGHT",
+        //     width: 0.5,
+        //     style: "NORMAL",
+        //   },
+        // ])
 
-        // if (index + 1 != data.summary.CASH.invoice.length) {
-        //   printer.newLine();
-        // }
-      });
+        printer.style("NORMAL")
+        .size(0.5, 0.5)
+        .drawLine()
 
-      printer
+        // .style("B")
+        // .size(0.5, 0.5)
+        // .tableCustom([
+        //   {
+        //     text: "Total",
+        //     align: "LEFT",
+        //     width: 0.5,
+        //     style: "B",
+        //   },
+        //   {
+        //     text: convertToRupiah(data.total.total),
+        //     align: "RIGHT",
+        //     width: 0.5,
+        //     style: "B",
+        //   },
+        // ])
+
+        .newLine()
+
         .style("B")
         .size(0.5, 0.5)
         .tableCustom([
           {
-            text: "Total Summary by " + data.summary.CASH.title,
+            text: "SUMMARY BY CASH",
             align: "LEFT",
             width: 0.5,
             style: "B",
           },
           {
-            text: convertToRupiah(data.summary.CASH.total),
-            align: "RIGHT",
+            text: "",
+            align: "LEFT",
             width: 0.5,
-            style: "B",
+            style: "NORMAL",
           },
         ])
+
         .newLine();
-      data_total.push({
-        title: "Total Summary by " + data.summary.CASH.title,
-        total: data.summary.CASH.total,
-      });
-    }
 
-    if ("DEBIT" in data.summary) {
-      data.summary.DEBIT.forEach((item3, index3, arr3) => {
-        printer
-          .style("B")
-          .size(0.5, 0.5)
-          .tableCustom([
-            {
-              text: "SUMMARY BY DEBIT " + item3.title,
-              align: "LEFT",
-              width: 0.5,
-              style: "B",
-            },
-            {
-              text: "",
-              align: "LEFT",
-              width: 0.5,
-              style: "NORMAL",
-            },
-          ])
-          .newLine();
-
-        item3.invoice.forEach((item4, index4, arr4) => {
+      if ("CASH" in data.summary) {
+        data.summary.CASH.invoice.forEach((item1, index1, arr1) => {
           printer
             .style("B")
             .size(0.5, 0.5)
             .tableCustom([
               {
-                text: item4.code,
+                text: item1.code,
                 align: "LEFT",
                 width: 0.5,
                 style: "B",
@@ -1446,35 +1342,25 @@ const printSalesSummary = (dataTrx) => {
             .tableCustom([
               { text: "Product", align: "LEFT", width: 0.5, style: "NORMAL" },
               { text: "QTY", align: "CENTER", width: 0.1, style: "NORMAL" },
-              {
-                text: "SUB TOTAL",
-                align: "RIGHT",
-                width: 0.3,
-                style: "NORMAL",
-              },
+              { text: "SUB TOTAL", align: "RIGHT", width: 0.3, style: "NORMAL" },
             ])
 
             .drawLine();
 
-          item4.product.forEach((item5, index5, arr5) => {
+          item1.product.forEach((item2, index2, arr2) => {
             printer
               .style("NORMAL")
               .size(0.05, 0.05)
               .tableCustom([
                 {
-                  text: item5.productName,
+                  text: item2.productName,
                   align: "LEFT",
                   width: 0.5,
                   style: "NORMAL",
                 },
+                { text: item2.qty, align: "CENTER", width: 0.1, style: "NORMAL" },
                 {
-                  text: item5.qty,
-                  align: "CENTER",
-                  width: 0.1,
-                  style: "NORMAL",
-                },
-                {
-                  text: convertToRupiah(item5.subTotal),
+                  text: convertToRupiah(item2.subTotal),
                   align: "RIGHT",
                   width: 0.3,
                   style: "NORMAL",
@@ -1484,22 +1370,23 @@ const printSalesSummary = (dataTrx) => {
 
           printer.drawLine();
 
-          // if (index + 1 != item.invoice.length) {
+          // if (index + 1 != data.summary.CASH.invoice.length) {
           //   printer.newLine();
           // }
         });
+
         printer
           .style("B")
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "Total Summary by DEBIT " + item3.title,
+              text: "Total Summary by " + data.summary.CASH.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
             },
             {
-              text: convertToRupiah(item3.total),
+              text: convertToRupiah(data.summary.CASH.total),
               align: "RIGHT",
               width: 0.5,
               style: "B",
@@ -1507,135 +1394,372 @@ const printSalesSummary = (dataTrx) => {
           ])
           .newLine();
         data_total.push({
-          title: "Total Summary by DEBIT " + item3.title,
-          total: item3.total,
+          title: "Total Summary by " + data.summary.CASH.title,
+          total: data.summary.CASH.total,
         });
-      });
-    }
+      }
 
-    if ("KREDIT" in data.summary) {
-      data.summary.KREDIT.forEach((item6, index6, arr6) => {
-        printer
-          .style("B")
-          .size(0.5, 0.5)
-          .tableCustom([
-            {
-              text: "SUMMARY BY KREDIT " + item6.title,
-              align: "LEFT",
-              width: 0.5,
-              style: "B",
-            },
-            {
-              text: "",
-              align: "LEFT",
-              width: 0.5,
-              style: "NORMAL",
-            },
-          ])
-          .newLine();
-
-        item6.invoice.forEach((item7, index7, arr7) => {
+      if ("DEBIT" in data.summary) {
+        data.summary.DEBIT.forEach((item1, index1, arr1) => {
           printer
             .style("B")
             .size(0.5, 0.5)
             .tableCustom([
               {
-                text: item7.code,
+                text: "SUMMARY BY DEBIT " + item1.title,
                 align: "LEFT",
                 width: 0.5,
                 style: "B",
               },
               {
                 text: "",
+                align: "LEFT",
+                width: 0.5,
+                style: "NORMAL",
+              },
+            ])
+            .newLine();
+
+          item1.invoice.forEach((item2, index2, arr2) => {
+            printer
+              .style("B")
+              .size(0.5, 0.5)
+              .tableCustom([
+                {
+                  text: item2.code,
+                  align: "LEFT",
+                  width: 0.5,
+                  style: "B",
+                },
+                {
+                  text: "",
+                  align: "RIGHT",
+                  width: 0.5,
+                  style: "B",
+                },
+              ])
+
+              .style("NORMAL")
+              .size(0.05, 0.05)
+              .drawLine()
+
+              .style("NORMAL")
+              .size(0.05, 0.05)
+              .tableCustom([
+                { text: "Product", align: "LEFT", width: 0.5, style: "NORMAL" },
+                { text: "QTY", align: "CENTER", width: 0.1, style: "NORMAL" },
+                {
+                  text: "SUB TOTAL",
+                  align: "RIGHT",
+                  width: 0.3,
+                  style: "NORMAL",
+                },
+              ])
+
+              .drawLine();
+
+            item2.product.forEach((item3, index3, arr3) => {
+              printer
+                .style("NORMAL")
+                .size(0.05, 0.05)
+                .tableCustom([
+                  {
+                    text: item3.productName,
+                    align: "LEFT",
+                    width: 0.5,
+                    style: "NORMAL",
+                  },
+                  {
+                    text: item3.qty,
+                    align: "CENTER",
+                    width: 0.1,
+                    style: "NORMAL",
+                  },
+                  {
+                    text: convertToRupiah(item3.subTotal),
+                    align: "RIGHT",
+                    width: 0.3,
+                    style: "NORMAL",
+                  },
+                ]);
+            });
+
+            printer.drawLine();
+
+            // if (index + 1 != item.invoice.length) {
+            //   printer.newLine();
+            // }
+          });
+          printer
+            .style("B")
+            .size(0.5, 0.5)
+            .tableCustom([
+              {
+                text: "Total Summary by DEBIT " + item1.title,
+                align: "LEFT",
+                width: 0.5,
+                style: "B",
+              },
+              {
+                text: convertToRupiah(item1.total),
                 align: "RIGHT",
                 width: 0.5,
                 style: "B",
               },
             ])
+            .newLine();
+          data_total.push({
+            title: "Total Summary by DEBIT " + item1.title,
+            total: item1.total,
+          });
+        });
+      }
 
-            .style("NORMAL")
-            .size(0.05, 0.05)
-            .drawLine()
-
-            .style("NORMAL")
-            .size(0.05, 0.05)
+      if ("KREDIT" in data.summary) {
+        data.summary.KREDIT.forEach((item1, index1, arr1) => {
+          printer
+            .style("B")
+            .size(0.5, 0.5)
             .tableCustom([
-              { text: "Product", align: "LEFT", width: 0.5, style: "NORMAL" },
-              { text: "QTY", align: "CENTER", width: 0.1, style: "NORMAL" },
               {
-                text: "SUB TOTAL",
-                align: "RIGHT",
-                width: 0.3,
+                text: "SUMMARY BY KREDIT " + item1.title,
+                align: "LEFT",
+                width: 0.5,
+                style: "B",
+              },
+              {
+                text: "",
+                align: "LEFT",
+                width: 0.5,
                 style: "NORMAL",
               },
             ])
+            .newLine();
 
-            .drawLine();
-
-          item7.product.forEach((item8, index8, arr8) => {
+          item1.invoice.forEach((item2, index2, arr2) => {
             printer
+              .style("B")
+              .size(0.5, 0.5)
+              .tableCustom([
+                {
+                  text: item2.code,
+                  align: "LEFT",
+                  width: 0.5,
+                  style: "B",
+                },
+                {
+                  text: "",
+                  align: "RIGHT",
+                  width: 0.5,
+                  style: "B",
+                },
+              ])
+
+              .style("NORMAL")
+              .size(0.05, 0.05)
+              .drawLine()
+
               .style("NORMAL")
               .size(0.05, 0.05)
               .tableCustom([
+                { text: "Product", align: "LEFT", width: 0.5, style: "NORMAL" },
+                { text: "QTY", align: "CENTER", width: 0.1, style: "NORMAL" },
                 {
-                  text: item8.productName,
-                  align: "LEFT",
-                  width: 0.5,
-                  style: "NORMAL",
-                },
-                {
-                  text: item8.qty,
-                  align: "CENTER",
-                  width: 0.1,
-                  style: "NORMAL",
-                },
-                {
-                  text: convertToRupiah(item8.subTotal),
+                  text: "SUB TOTAL",
                   align: "RIGHT",
                   width: 0.3,
                   style: "NORMAL",
                 },
-              ]);
+              ])
+
+              .drawLine();
+
+            item2.product.forEach((item2, index2, arr2) => {
+              printer
+                .style("NORMAL")
+                .size(0.05, 0.05)
+                .tableCustom([
+                  {
+                    text: item2.productName,
+                    align: "LEFT",
+                    width: 0.5,
+                    style: "NORMAL",
+                  },
+                  {
+                    text: item2.qty,
+                    align: "CENTER",
+                    width: 0.1,
+                    style: "NORMAL",
+                  },
+                  {
+                    text: convertToRupiah(item2.subTotal),
+                    align: "RIGHT",
+                    width: 0.3,
+                    style: "NORMAL",
+                  },
+                ]);
+            });
+
+            printer.drawLine();
+
+            // if (index + 1 != item.invoice.length) {
+            //   printer.newLine();
+            // }
           });
-
-          printer.drawLine();
-
-          // if (index + 1 != item.invoice.length) {
-          //   printer.newLine();
-          // }
+          printer
+            .style("B")
+            .size(0.5, 0.5)
+            .tableCustom([
+              {
+                text: "Total Summary by KREDIT " + item1.title,
+                align: "LEFT",
+                width: 0.5,
+                style: "B",
+              },
+              {
+                text: convertToRupiah(item1.total),
+                align: "RIGHT",
+                width: 0.5,
+                style: "B",
+              },
+            ])
+            .newLine();
+          data_total.push({
+            title: "Total Summary by KREDIT " + item1.title,
+            total: item1.total,
+          });
         });
-        printer
-          .style("B")
-          .size(0.5, 0.5)
-          .tableCustom([
-            {
-              text: "Total Summary by KREDIT " + item6.title,
-              align: "LEFT",
-              width: 0.5,
-              style: "B",
-            },
-            {
-              text: convertToRupiah(item6.total),
-              align: "RIGHT",
-              width: 0.5,
-              style: "B",
-            },
-          ])
-          .newLine();
+      }
+
+      printer
+        .newLine()
+        .newLine()
+        .newLine()
+        .marginBottom(15)
+        .cut()
+        .close();
+    });
+  }else{
+    device.open(function () {
+      printer
+        .font("B")
+        .align("CT")
+        .style("B")
+        .size(1.5, 1.5)
+        .text("SALES SUMMARY")
+
+        .newLine()
+
+        .style("NORMAL")
+        .size(0.5, 0.5)
+        .drawLine()
+
+        .style("NORMAL")
+        .size(0.05, 0.05)
+
+        .tableCustom([
+          { text: "Tanggal", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.date,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+        .tableCustom([
+          { text: "Cashier", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.cashier,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+        .tableCustom([
+          { text: "Nama Cashier", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.cashierName,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+        .tableCustom([
+          { text: "Shift", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: data.shift,
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+
+        .style("NORMAL")
+        .size(0.5, 0.5)
+        .drawLine()
+
+        .style("NORMAL")
+        .size(0.05, 0.05)
+        .tableCustom([
+          { text: "Total Sales", align: "LEFT", width: 0.5, style: "NORMAL" },
+          {
+            text: convertToRupiah(data.total.sales),
+            align: "RIGHT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ]);
+      // Summary cash
+      data.summary.CASH.invoice.forEach((item1, index1, arr1) => {
         data_total.push({
-          title: "Total Summary by KREDIT " + item6.title,
-          total: item6.total,
+          title: "Total Summary by " + data.summary.CASH.title,
+          total: data.summary.CASH.total,
         });
       });
-    }
 
-    printer
+      // Summary debit
+      data.summary.DEBIT.forEach((item1, index1, arr1) => {
+        data_total.push({
+          title: "Total Summary by DEBIT " + item1.title,
+          total: item1.total,
+        });
+      });
+
+      // Summary kredit
+      data.summary.KREDIT.forEach((item1, index1, arr1) => {
+        data_total.push({
+          title: "Total Summary by KREDIT " + item1.title,
+          total: item1.total,
+        });
+      });
+
+      if (data_total.length > 0) {
+        data_total.forEach((item, index, arr) => {
+          printer
+            .style("NORMAL")
+            .size(0.05, 0.05)
+            .tableCustom([
+              { text: item.title, align: "LEFT", width: 0.5, style: "NORMAL" },
+              {
+                text: convertToRupiah(item.total),
+                align: "RIGHT",
+                width: 0.5,
+                style: "NORMAL",
+              },
+            ]);
+        });
+      }
+
+      printer.style("NORMAL")
+      .size(0.5, 0.5)
+      .drawLine()
+      .newLine()
       .newLine()
       .newLine()
       .newLine()
       .marginBottom(15)
-      .cashdraw()
       .cut()
       .close();
-  });
+    });
+  }
 };
