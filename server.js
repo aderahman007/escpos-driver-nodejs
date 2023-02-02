@@ -1225,21 +1225,21 @@ const printSalesSummary = (dataTrx) => {
     //     style: "NORMAL",
     //   },
     // ])
-    printer
-      .tableCustom([
-        {
-          text: "Total Service Charge",
-          align: "LEFT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-        {
-          text: convertToRupiah(data.total.servCharge),
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
+    // printer
+    //   .tableCustom([
+    //     {
+    //       text: "Total Service Charge",
+    //       align: "LEFT",
+    //       width: 0.5,
+    //       style: "NORMAL",
+    //     },
+    //     {
+    //       text: convertToRupiah(data.total.servCharge),
+    //       align: "RIGHT",
+    //       width: 0.5,
+    //       style: "NORMAL",
+    //     },
+    //   ])
       // .tableCustom([
       //   {
       //     text: "Total Tax",
@@ -1254,22 +1254,22 @@ const printSalesSummary = (dataTrx) => {
       //     style: "NORMAL",
       //   },
       // ])
-      .tableCustom([
-        {
-          text: "Total Adjustment",
-          align: "LEFT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-        {
-          text: convertToRupiah(data.total.adjustment),
-          align: "RIGHT",
-          width: 0.5,
-          style: "NORMAL",
-        },
-      ])
+      // .tableCustom([
+      //   {
+      //     text: "Total Adjustment",
+      //     align: "LEFT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      //   {
+      //     text: convertToRupiah(data.total.adjustment),
+      //     align: "RIGHT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      // ])
 
-      .style("NORMAL")
+      printer.style("NORMAL")
       .size(0.5, 0.5)
       .drawLine()
 
@@ -1312,13 +1312,13 @@ const printSalesSummary = (dataTrx) => {
       .newLine();
 
     if ("CASH" in data.summary) {
-      data.summary.CASH.invoice.forEach((item, index, arr) => {
+      data.summary.CASH.invoice.forEach((item1, index1, arr1) => {
         printer
           .style("B")
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: item.code,
+              text: item1.code,
               align: "LEFT",
               width: 0.5,
               style: "B",
@@ -1345,20 +1345,20 @@ const printSalesSummary = (dataTrx) => {
 
           .drawLine();
 
-        item.product.forEach((item, index, arr) => {
+        item.product.forEach((item2, index2, arr2) => {
           printer
             .style("NORMAL")
             .size(0.05, 0.05)
             .tableCustom([
               {
-                text: item.productName,
+                text: item2.productName,
                 align: "LEFT",
                 width: 0.5,
                 style: "NORMAL",
               },
-              { text: item.qty, align: "CENTER", width: 0.1, style: "NORMAL" },
+              { text: item2.qty, align: "CENTER", width: 0.1, style: "NORMAL" },
               {
-                text: convertToRupiah(item.subTotal),
+                text: convertToRupiah(item2.subTotal),
                 align: "RIGHT",
                 width: 0.3,
                 style: "NORMAL",
@@ -1398,13 +1398,13 @@ const printSalesSummary = (dataTrx) => {
     }
 
     if ("DEBIT" in data.summary) {
-      data.summary.DEBIT.forEach((item, index, arr) => {
+      data.summary.DEBIT.forEach((item3, index3, arr3) => {
         printer
           .style("B")
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "SUMMARY BY DEBIT " + item.title,
+              text: "SUMMARY BY DEBIT " + item3.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
@@ -1418,13 +1418,13 @@ const printSalesSummary = (dataTrx) => {
           ])
           .newLine();
 
-        item.invoice.forEach((item, index, arr) => {
+        item3.invoice.forEach((item4, index4, arr4) => {
           printer
             .style("B")
             .size(0.5, 0.5)
             .tableCustom([
               {
-                text: item.code,
+                text: item4.code,
                 align: "LEFT",
                 width: 0.5,
                 style: "B",
@@ -1456,25 +1456,25 @@ const printSalesSummary = (dataTrx) => {
 
             .drawLine();
 
-          item.product.forEach((item, index, arr) => {
+          item4.product.forEach((item5, index5, arr5) => {
             printer
               .style("NORMAL")
               .size(0.05, 0.05)
               .tableCustom([
                 {
-                  text: item.productName,
+                  text: item5.productName,
                   align: "LEFT",
                   width: 0.5,
                   style: "NORMAL",
                 },
                 {
-                  text: item.qty,
+                  text: item5.qty,
                   align: "CENTER",
                   width: 0.1,
                   style: "NORMAL",
                 },
                 {
-                  text: convertToRupiah(item.subTotal),
+                  text: convertToRupiah(item5.subTotal),
                   align: "RIGHT",
                   width: 0.3,
                   style: "NORMAL",
@@ -1493,13 +1493,13 @@ const printSalesSummary = (dataTrx) => {
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "Total Summary by DEBIT " + item.title,
+              text: "Total Summary by DEBIT " + item3.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
             },
             {
-              text: convertToRupiah(item.total),
+              text: convertToRupiah(item3.total),
               align: "RIGHT",
               width: 0.5,
               style: "B",
@@ -1507,20 +1507,20 @@ const printSalesSummary = (dataTrx) => {
           ])
           .newLine();
         data_total.push({
-          title: "Total Summary by DEBIT " + item.title,
-          total: item.total,
+          title: "Total Summary by DEBIT " + item3.title,
+          total: item3.total,
         });
       });
     }
 
     if ("KREDIT" in data.summary) {
-      data.summary.KREDIT.forEach((item, index, arr) => {
+      data.summary.KREDIT.forEach((item6, index6, arr6) => {
         printer
           .style("B")
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "SUMMARY BY KREDIT " + item.title,
+              text: "SUMMARY BY KREDIT " + item6.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
@@ -1534,13 +1534,13 @@ const printSalesSummary = (dataTrx) => {
           ])
           .newLine();
 
-        item.invoice.forEach((item, index, arr) => {
+        item6.invoice.forEach((item7, index7, arr7) => {
           printer
             .style("B")
             .size(0.5, 0.5)
             .tableCustom([
               {
-                text: item.code,
+                text: item7.code,
                 align: "LEFT",
                 width: 0.5,
                 style: "B",
@@ -1572,25 +1572,25 @@ const printSalesSummary = (dataTrx) => {
 
             .drawLine();
 
-          item.product.forEach((item, index, arr) => {
+          item7.product.forEach((item8, index8, arr8) => {
             printer
               .style("NORMAL")
               .size(0.05, 0.05)
               .tableCustom([
                 {
-                  text: item.productName,
+                  text: item8.productName,
                   align: "LEFT",
                   width: 0.5,
                   style: "NORMAL",
                 },
                 {
-                  text: item.qty,
+                  text: item8.qty,
                   align: "CENTER",
                   width: 0.1,
                   style: "NORMAL",
                 },
                 {
-                  text: convertToRupiah(item.subTotal),
+                  text: convertToRupiah(item8.subTotal),
                   align: "RIGHT",
                   width: 0.3,
                   style: "NORMAL",
@@ -1609,13 +1609,13 @@ const printSalesSummary = (dataTrx) => {
           .size(0.5, 0.5)
           .tableCustom([
             {
-              text: "Total Summary by KREDIT " + item.title,
+              text: "Total Summary by KREDIT " + item6.title,
               align: "LEFT",
               width: 0.5,
               style: "B",
             },
             {
-              text: convertToRupiah(item.total),
+              text: convertToRupiah(item6.total),
               align: "RIGHT",
               width: 0.5,
               style: "B",
@@ -1623,8 +1623,8 @@ const printSalesSummary = (dataTrx) => {
           ])
           .newLine();
         data_total.push({
-          title: "Total Summary by KREDIT " + item.title,
-          total: item.total,
+          title: "Total Summary by KREDIT " + item6.title,
+          total: item6.total,
         });
       });
     }
