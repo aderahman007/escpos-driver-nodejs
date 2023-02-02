@@ -1125,12 +1125,11 @@ const printShiftReport = (
   });
 };
 
-const printSalesSummary = (dataTrx, type = 'detail') => {
+const printSalesSummary = (dataTrx, type = "detail") => {
   let data = JSON.parse(dataTrx);
   console.log(data);
-  let data_total = [];
 
-  if (type == 'detail') {
+  if (type == "detail") {
     device.open(function () {
       printer
         .font("B")
@@ -1199,15 +1198,40 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
             width: 0.5,
             style: "NORMAL",
           },
-        ]);
+        ])
+        .drawLine();
 
-      if (data_total.length > 0) {
-        data_total.forEach((item, index, arr) => {
+      printer
+        .style("B")
+        .size(0.5, 0.5)
+        .tableCustom([
+          {
+            text: "SUMMARY BY PAYMENT",
+            align: "LEFT",
+            width: 0.5,
+            style: "B",
+          },
+          {
+            text: "",
+            align: "LEFT",
+            width: 0.5,
+            style: "NORMAL",
+          },
+        ])
+        .newLine();
+
+      if (data.summaryByPayment.length > 0) {
+        data.summaryByPayment.forEach((item, index, arr) => {
           printer
             .style("NORMAL")
             .size(0.05, 0.05)
             .tableCustom([
-              { text: item.title, align: "LEFT", width: 0.5, style: "NORMAL" },
+              {
+                text: "Total Summary by " + item.title,
+                align: "LEFT",
+                width: 0.5,
+                style: "NORMAL",
+              },
               {
                 text: convertToRupiah(item.total),
                 align: "RIGHT",
@@ -1242,36 +1266,37 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
       //       style: "NORMAL",
       //     },
       //   ])
-        // .tableCustom([
-        //   {
-        //     text: "Total Tax",
-        //     align: "LEFT",
-        //     width: 0.5,
-        //     style: "NORMAL",
-        //   },
-        //   {
-        //     text: convertToRupiah(data.total.tax),
-        //     align: "RIGHT",
-        //     width: 0.5,
-        //     style: "NORMAL",
-        //   },
-        // ])
-        // .tableCustom([
-        //   {
-        //     text: "Total Adjustment",
-        //     align: "LEFT",
-        //     width: 0.5,
-        //     style: "NORMAL",
-        //   },
-        //   {
-        //     text: convertToRupiah(data.total.adjustment),
-        //     align: "RIGHT",
-        //     width: 0.5,
-        //     style: "NORMAL",
-        //   },
-        // ])
+      // .tableCustom([
+      //   {
+      //     text: "Total Tax",
+      //     align: "LEFT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      //   {
+      //     text: convertToRupiah(data.total.tax),
+      //     align: "RIGHT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      // ])
+      // .tableCustom([
+      //   {
+      //     text: "Total Adjustment",
+      //     align: "LEFT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      //   {
+      //     text: convertToRupiah(data.total.adjustment),
+      //     align: "RIGHT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      // ])
 
-        printer.style("NORMAL")
+      printer
+        .style("NORMAL")
         .size(0.5, 0.5)
         .drawLine()
 
@@ -1342,7 +1367,12 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
             .tableCustom([
               { text: "Product", align: "LEFT", width: 0.5, style: "NORMAL" },
               { text: "QTY", align: "CENTER", width: 0.1, style: "NORMAL" },
-              { text: "SUB TOTAL", align: "RIGHT", width: 0.3, style: "NORMAL" },
+              {
+                text: "SUB TOTAL",
+                align: "RIGHT",
+                width: 0.3,
+                style: "NORMAL",
+              },
             ])
 
             .drawLine();
@@ -1358,7 +1388,12 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
                   width: 0.5,
                   style: "NORMAL",
                 },
-                { text: item2.qty, align: "CENTER", width: 0.1, style: "NORMAL" },
+                {
+                  text: item2.qty,
+                  align: "CENTER",
+                  width: 0.1,
+                  style: "NORMAL",
+                },
                 {
                   text: convertToRupiah(item2.subTotal),
                   align: "RIGHT",
@@ -1393,10 +1428,6 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
             },
           ])
           .newLine();
-        data_total.push({
-          title: "Total Summary by " + data.summary.CASH.title,
-          total: data.summary.CASH.total,
-        });
       }
 
       if ("DEBIT" in data.summary) {
@@ -1508,10 +1539,6 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
               },
             ])
             .newLine();
-          data_total.push({
-            title: "Total Summary by DEBIT " + item1.title,
-            total: item1.total,
-          });
         });
       }
 
@@ -1624,22 +1651,12 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
               },
             ])
             .newLine();
-          data_total.push({
-            title: "Total Summary by KREDIT " + item1.title,
-            total: item1.total,
-          });
         });
       }
 
-      printer
-        .newLine()
-        .newLine()
-        .newLine()
-        .marginBottom(15)
-        .cut()
-        .close();
+      printer.newLine().newLine().newLine().marginBottom(15).cut().close();
     });
-  }else{
+  } else {
     device.open(function () {
       printer
         .font("B")
@@ -1709,37 +1726,19 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
             style: "NORMAL",
           },
         ]);
-      // Summary cash
-      data.summary.CASH.invoice.forEach((item1, index1, arr1) => {
-        data_total.push({
-          title: "Total Summary by " + data.summary.CASH.title,
-          total: data.summary.CASH.total,
-        });
-      });
 
-      // Summary debit
-      data.summary.DEBIT.forEach((item1, index1, arr1) => {
-        data_total.push({
-          title: "Total Summary by DEBIT " + item1.title,
-          total: item1.total,
-        });
-      });
-
-      // Summary kredit
-      data.summary.KREDIT.forEach((item1, index1, arr1) => {
-        data_total.push({
-          title: "Total Summary by KREDIT " + item1.title,
-          total: item1.total,
-        });
-      });
-
-      if (data_total.length > 0) {
-        data_total.forEach((item, index, arr) => {
+      if (data.summaryByPayment.length > 0) {
+        data.summaryByPayment.forEach((item, index, arr) => {
           printer
             .style("NORMAL")
             .size(0.05, 0.05)
             .tableCustom([
-              { text: item.title, align: "LEFT", width: 0.5, style: "NORMAL" },
+              {
+                text: "Total Summary by " + item.title,
+                align: "LEFT",
+                width: 0.5,
+                style: "NORMAL",
+              },
               {
                 text: convertToRupiah(item.total),
                 align: "RIGHT",
@@ -1750,16 +1749,17 @@ const printSalesSummary = (dataTrx, type = 'detail') => {
         });
       }
 
-      printer.style("NORMAL")
-      .size(0.5, 0.5)
-      .drawLine()
-      .newLine()
-      .newLine()
-      .newLine()
-      .newLine()
-      .marginBottom(15)
-      .cut()
-      .close();
+      printer
+        .style("NORMAL")
+        .size(0.5, 0.5)
+        .drawLine()
+        .newLine()
+        .newLine()
+        .newLine()
+        .newLine()
+        .marginBottom(15)
+        .cut()
+        .close();
     });
   }
 };
