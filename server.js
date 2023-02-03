@@ -1229,13 +1229,13 @@ const printSalesSummary = (dataTrx, type = "detail") => {
               {
                 text: "Total Summary by " + item.title,
                 align: "LEFT",
-                width: 0.5,
+                width: 0.6,
                 style: "NORMAL",
               },
               {
                 text: convertToRupiah(item.total),
                 align: "RIGHT",
-                width: 0.5,
+                width: 0.4,
                 style: "NORMAL",
               },
             ]);
