@@ -124,6 +124,7 @@ const printStruck = (
   customer,
   agency
 ) => {
+  let total_item = 0;
   device.open(function () {
     printer
       .font("B")
@@ -188,6 +189,7 @@ const printStruck = (
       .drawLine();
 
     carts.forEach((item, index, arr) => {
+      total_item += item.qty;
       printer.tableCustom([
         {
           text: "x" + item.qty,
@@ -212,6 +214,15 @@ const printStruck = (
     });
     printer
       .drawLine()
+      .tableCustom([
+        { text: "Total Item", align: "LEFT", width: 0.5, style: "NORMAL" },
+        {
+          text: total_item,
+          align: "RIGHT",
+          width: 0.5,
+          style: "NORMAL",
+        },
+      ])
       .tableCustom([
         { text: "Sub Total", align: "LEFT", width: 0.5, style: "NORMAL" },
         {
@@ -1191,7 +1202,7 @@ const printSalesSummary = (dataTrx, type = "detail") => {
         .style("NORMAL")
         .size(0.05, 0.05)
         .tableCustom([
-          { text: "Total Sales", align: "LEFT", width: 0.5, style: "NORMAL" },
+          { text: "Total Sales", align: "LEFT", width: 0.6, style: "NORMAL" },
           {
             text: convertToRupiah(data.total.sales),
             align: "RIGHT",
