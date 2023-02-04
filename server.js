@@ -1206,7 +1206,7 @@ const printSalesSummary = (dataTrx, type = "detail") => {
           {
             text: convertToRupiah(data.total.sales),
             align: "RIGHT",
-            width: 0.5,
+            width: 0.4,
             style: "NORMAL",
           },
         ])
@@ -1733,7 +1733,7 @@ const printSalesSummary = (dataTrx, type = "detail") => {
           {
             text: convertToRupiah(data.total.sales),
             align: "RIGHT",
-            width: 0.5,
+            width: 0.4,
             style: "NORMAL",
           },
         ]);
