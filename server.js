@@ -189,7 +189,7 @@ const printStruck = (
       .drawLine();
 
     carts.forEach((item, index, arr) => {
-      total_item += item.qty;
+      total_item += parseInt(item.qty);
       printer.tableCustom([
         {
           text: "x" + item.qty,
