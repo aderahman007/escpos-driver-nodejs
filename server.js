@@ -1729,7 +1729,7 @@ const printSalesSummary = (dataTrx, type = "detail") => {
         .style("NORMAL")
         .size(0.05, 0.05)
         .tableCustom([
-          { text: "Total Sales", align: "LEFT", width: 0.5, style: "NORMAL" },
+          { text: "Total Sales", align: "LEFT", width: 0.6, style: "NORMAL" },
           {
             text: convertToRupiah(data.total.sales),
             align: "RIGHT",
@@ -1747,13 +1747,13 @@ const printSalesSummary = (dataTrx, type = "detail") => {
               {
                 text: "Total Summary by " + item.title,
                 align: "LEFT",
-                width: 0.5,
+                width: 0.6,
                 style: "NORMAL",
               },
               {
                 text: convertToRupiah(item.total),
                 align: "RIGHT",
-                width: 0.5,
+                width: 0.4,
                 style: "NORMAL",
               },
             ]);
