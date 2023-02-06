@@ -37,7 +37,8 @@ app.post("/printStruck", (req, res) => {
     response.noTransaksi,
     response.kasir,
     response.customer,
-    response.agency
+    response.agency,
+    response.paymentMethod
   );
   throw new Error("BROKEN");
 });
@@ -122,7 +123,8 @@ const printStruck = (
   noTransaksi,
   kasir,
   customer,
-  agency
+  agency,
+  paymentMethod
 ) => {
   let total_item = 0;
   device.open(function () {
@@ -222,16 +224,28 @@ const printStruck = (
           width: 0.5,
           style: "NORMAL",
         },
-      ])
+      ]);
+    paymentMethod.forEach((item) => {
+      printer
       .tableCustom([
-        { text: "Sub Total", align: "LEFT", width: 0.5, style: "NORMAL" },
+        { text: "Metode Pembayaran by " + item.method, align: "LEFT", width: 0.5, style: "NORMAL" },
         {
-          text: convertToRupiah(subTotal, "Rp."),
+          text: convertToRupiah(item.total, 'Rp.'),
           align: "RIGHT",
           width: 0.5,
           style: "NORMAL",
         },
-      ])
+      ]);
+    });
+      // .tableCustom([
+      //   { text: "Sub Total", align: "LEFT", width: 0.5, style: "NORMAL" },
+      //   {
+      //     text: convertToRupiah(subTotal, "Rp."),
+      //     align: "RIGHT",
+      //     width: 0.5,
+      //     style: "NORMAL",
+      //   },
+      // ])
       //       .tableCustom([
       //         { text: "Pajak", align: "LEFT", width: 0.5, style: "NORMAL" },
       //         {
@@ -250,7 +264,7 @@ const printStruck = (
       //           style: "NORMAL",
       //         },
       //       ])
-      .tableCustom([
+      printer.tableCustom([
         { text: "Total", align: "LEFT", width: 0.5, style: "NORMAL" },
         {
           text: convertToRupiah(total, "Rp."),
