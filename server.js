@@ -22,6 +22,14 @@ http.listen(port, () => {
   console.log(`Printer: http://localhost:${port}`);
 });
 
+app.post("/printTest", (req, res) => {
+  res.json({ status: "success" });
+  let response = req.body;
+  printTest();
+  // throw new Error("BROKEN");
+});
+
+
 app.post("/printStruck", (req, res) => {
   res.json({ status: "success" });
   let response = req.body;
@@ -71,6 +79,34 @@ app.post("/printSalesSummary", (req, res) => {
   // console.log(response);
   printSalesSummary(response.data, response.type);
 });
+
+const printTest = () => {
+  const usb = require('usb');
+  // console.log(usb.getDeviceList());
+
+  const cmds = [
+    'SIZE 55 mm,20 mm',
+    'CLS',
+    'TEXT 200,20,"3",0,1,1,2,"BTS"',
+    'BARCODE 65,55,"128",50,2,0,3,3,"MLA00001"',
+    'TEXT 30,135,"1",0,1,1,2,"Kemko Clusore pdk"',
+    'TEXT 300,135,"1",0,1,1,2,"Rp.300.000"',
+    'PRINT 1',
+    'END',
+  ];
+
+  // you can get all available devices with usb.getDeviceList()
+  // let device = usb.findByIds(/*vid*/2502, /*pid*/581);
+  console.log(device.device);
+  let printerDevice = device.device;
+  printerDevice.open();
+  printerDevice.interfaces[0].claim();
+  const outEndpoint = printerDevice.interfaces[0].endpoints.find(e => e.direction === 'out');
+  outEndpoint.transferType = 2;
+  outEndpoint.transfer(Buffer.from(cmds.join('\r\n')), (err) => {
+    printerDevice.close();
+  });
+}
 
 const convertToRupiah = (number, currency = "Rp. ") => {
   if (number) {
